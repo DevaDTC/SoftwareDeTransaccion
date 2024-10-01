@@ -1,0 +1,137 @@
+1# Simulación de Carrito de Compras
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .cart {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .cart h2 {
+            margin-top: 0;
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .total {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .cancel-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="cart">
+    <h2>Your Shopping Cart</h2>
+
+    <div class="item">
+        <span>Product 1</span>
+        <span>$10.00</span>
+        <input type="checkbox" class="item-checkbox" data-price="10">
+    </div>
+    <div class="item">
+        <span>Product 2</span>
+        <span>$15.00</span>
+        <input type="checkbox" class="item-checkbox" data-price="15">
+    </div>
+    <div class="item">
+        <span>Product 3</span>
+        <span>$20.00</span>
+        <input type="checkbox" class="item-checkbox" data-price="20">
+    </div>
+
+    <div class="total">
+        Total: $<span id="total-amount">0.00</span>
+    </div>
+    <button id="checkout-btn">Checkout</button>
+    <button id="cancel-btn" class="cancel-btn" style="display: none;">Cancel</button>
+</div>
+
+<script>
+    const checkboxes = document.querySelectorAll('.item-checkbox');
+    const totalAmount = document.getElementById('total-amount');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const cancelBtn = document.getElementById('cancel-btn');
+    let total = 0;
+    let transactionTimeout;
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const price = parseFloat(this.getAttribute('data-price'));
+            if (this.checked) {
+                total += price;
+            } else {
+                total -= price;
+            }
+            totalAmount.textContent = total.toFixed(2);
+        });
+    });
+
+    checkoutBtn.addEventListener('click', function() {
+        checkoutBtn.disabled = true;
+        cancelBtn.style.display = 'inline-block';
+
+        transactionTimeout = setTimeout(() => {
+            alert('Compra confirmada. Transacción completada.');
+            cancelBtn.style.display = 'none';
+            resetCart();
+        }, 5000);
+    });
+
+    cancelBtn.addEventListener('click', function() {
+        clearTimeout(transactionTimeout);
+        alert('Transacción cancelada.');
+        cancelBtn.style.display = 'none';
+        checkoutBtn.disabled = false;
+    });
+
+    function resetCart() {
+        total = 0;
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        totalAmount.textContent = total.toFixed(2);
+        checkoutBtn.disabled = false;
+    }
+</script>
+
+</body>
+</html>
